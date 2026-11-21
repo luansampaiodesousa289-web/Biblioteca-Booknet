@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS materiais_estudo(
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  titulo VARCHAR(255) NOT NULL,
+  disciplina VARCHAR(120) NOT NULL,
+  descricao TEXT,
+  link_externo VARCHAR(500),
+  arquivo_pdf VARCHAR(255),
+  criado_por INT UNSIGNED NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_material_gestor FOREIGN KEY(criado_por) REFERENCES usuarios(id),
+  INDEX(disciplina)
+);

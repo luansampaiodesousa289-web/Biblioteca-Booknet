@@ -1,0 +1,1 @@
+<?php require_once __DIR__.'/../config/auth.php';require_admin();header('Content-Type: application/json; charset=utf-8');echo json_encode(db()->query('SELECT * FROM livros ORDER BY titulo')->fetchAll(),JSON_UNESCAPED_UNICODE);

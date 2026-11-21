@@ -1,0 +1,16 @@
+<?php require_once __DIR__.'/../config/auth.php';require_login();$id=user()['id'];
+if($_SERVER['REQUEST_METHOD']==='POST'){verify_csrf();$fotoAtual=null;$s=db()->prepare('SELECT foto FROM usuarios WHERE id=?');$s->execute([$id]);$fotoAtual=$s->fetchColumn();
+if(isset($_FILES['foto']) && $_FILES['foto']['error']===UPLOAD_ERR_OK){$ext=strtolower(pathinfo($_FILES['foto']['name'],PATHINFO_EXTENSION));$permitidas=['jpg','jpeg','png','webp'];if(in_array($ext,$permitidas) && $_FILES['foto']['size']<=2*1024*1024){$nome=bin2hex(random_bytes(16)).'.'.$ext;$dir=__DIR__.'/../assets/uploads/perfis/';if(!is_dir($dir))mkdir($dir,0755,true);move_uploaded_file($_FILES['foto']['tmp_name'],$dir.$nome);$fotoAtual='assets/uploads/perfis/'.$nome;}}
+$s=db()->prepare('UPDATE usuarios SET nome=?,email=?,telefone=?,turma=?,curso=?,foto=? WHERE id=?');try{$s->execute([trim($_POST['nome']),trim($_POST['email']),trim($_POST['telefone']),trim($_POST['turma']),trim($_POST['curso']),$fotoAtual,$id]);$_SESSION['user']['nome']=trim($_POST['nome']);$_SESSION['user']['email']=trim($_POST['email']);flash('success','Perfil atualizado.');}catch(PDOException $e){flash('error','Este e-mail já está em uso.');}redirect('aluno/perfil.php');}
+$s=db()->prepare('SELECT * FROM usuarios WHERE id=?');$s->execute([$id]);$u=$s->fetch();$pageTitle='Meu perfil';require __DIR__.'/../includes/header.php';require __DIR__.'/../includes/dashboard-nav.php';?><form class="panel" method="post" enctype="multipart/form-data" style="max-width:700px"><?=csrf_field()?>
+<div style="text-align:center;margin-bottom:20px"><img src="<?=e($u['foto'] ?: 'assets/uploads/perfis/default.png')?>" style="width:110px;height:110px;border-radius:50%;object-fit:cover"></div>
+<div class="form-group"><label>Foto de perfil</label><input type="file" name="foto" accept="image/png,image/jpeg,image/webp"></div>
+<div class="form-grid"><div class="form-group"><label>Nome</label><input required name="nome" value="<?=e($u['nome'])?>"></div><div class="form-group"><label>E-mail</label><input required type="email" name="email" value="<?=e($u['email'])?>"></div><div class="form-group"><label>Telefone</label><input name="telefone" value="<?=e($u['telefone'])?>"></div><div class="form-group"><label>RA</label><input disabled value="<?=e($u['ra'])?>"></div><div class="form-group"><label>Turma</label><input name="turma" value="<?=e($u['turma'])?>"></div><div class="form-group"><label>Curso</label><input name="curso" value="<?=e($u['curso'])?>"></div></div><button class="btn">Salvar alterações</button></form>
+<div class="panel" style="max-width:700px">
+<h2>Configurações de aparência</h2>
+<p class="subtext">Escolha como a Biblioteca BookNet será exibida neste dispositivo. A preferência fica salva automaticamente.</p>
+<div class="theme-settings">
+<button type="button" class="theme-option" data-theme-choice="light" aria-pressed="false" onclick="setBooknetTheme('light')">☀️ <strong>Modo White</strong><span>Tema claro</span></button>
+<button type="button" class="theme-option" data-theme-choice="dark" aria-pressed="false" onclick="setBooknetTheme('dark')">🌙 <strong>Modo Dark</strong><span>Tema escuro</span></button>
+</div>
+</div><?php require __DIR__.'/../includes/dashboard-footer.php';?>

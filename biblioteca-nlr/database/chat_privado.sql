@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS chat_privado(
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ remetente_id INT UNSIGNED NOT NULL,
+ destinatario_id INT UNSIGNED NOT NULL,
+ mensagem VARCHAR(500) NOT NULL,
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ INDEX(remetente_id), INDEX(destinatario_id)
+);

@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS clubes_livro (
+ id INT AUTO_INCREMENT PRIMARY KEY,
+ nome VARCHAR(120) NOT NULL,
+ descricao TEXT,
+ criador_id INT NOT NULL,
+ criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ FOREIGN KEY (criador_id) REFERENCES usuarios(id)
+);

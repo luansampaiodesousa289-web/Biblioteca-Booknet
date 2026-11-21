@@ -1,0 +1,1 @@
+ALTER TABLE livros ADD COLUMN arquivo_pdf VARCHAR(255) NULL AFTER capa;

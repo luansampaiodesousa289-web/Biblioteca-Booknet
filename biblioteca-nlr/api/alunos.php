@@ -1,0 +1,1 @@
+<?php require_once __DIR__.'/../config/auth.php';require_admin();header('Content-Type: application/json; charset=utf-8');echo json_encode(db()->query("SELECT id,nome,email,ra,turma,curso,status FROM usuarios WHERE tipo='aluno' ORDER BY nome")->fetchAll(),JSON_UNESCAPED_UNICODE);

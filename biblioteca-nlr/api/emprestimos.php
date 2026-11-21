@@ -1,0 +1,1 @@
+<?php require_once __DIR__.'/../config/auth.php';require_admin();header('Content-Type: application/json; charset=utf-8');echo json_encode(db()->query('SELECT * FROM emprestimos ORDER BY created_at DESC')->fetchAll(),JSON_UNESCAPED_UNICODE);
